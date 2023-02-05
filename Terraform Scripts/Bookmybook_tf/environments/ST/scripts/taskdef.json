@@ -1,0 +1,165 @@
+[{
+  "name":"${cname}",
+  "image": "850714186843.dkr.ecr.us-west-2.amazonaws.com/bookmybook-staging-app:latest",
+  "cpu": 10,
+  "memoryReservation": 300,
+  "executionRoleArn": "arn:aws:iam::850714186843:role/ecs-task-execution-role",
+
+  "essential": true,
+      "command": [
+        "bash",
+        "app-entrypoint.sh",
+        "${entrypoint}"
+      ],
+      "environment": [
+        {
+          "name": "ENVIRONMENT",
+          "value": "staging"
+        },
+        {
+          "name": "PROJECT",
+          "value": "bookmybook"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "${logs}",
+          "awslogs-region": "us-west-2",
+          "awslogs-create-group": "true"
+        }
+      },
+      "secrets": [
+        {
+          "valueFrom": "arn:aws:ssm:us-west-2:850714186843:parameter/bookmybook/staging/ALLOWED_HOSTS",
+          "name": "ALLOWED_HOSTS"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:us-west-2:850714186843:parameter/bookmybook/staging/B64_REST_SOCIAL_OAUTH_ABSOLUTE_REDIRECT_URI",
+          "name": "B64_REST_SOCIAL_OAUTH_ABSOLUTE_REDIRECT_URI"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:us-west-2:850714186843:parameter/bookmybook/staging/B64_SOCIAL_AUTH_GOOGLE_OAUTH2_WHITELISTED_DOMAINS",
+          "name": "B64_SOCIAL_AUTH_GOOGLE_OAUTH2_WHITELISTED_DOMAINS"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:us-west-2:850714186843:parameter/bookmybook/staging/CELERY_BROKER_URL",
+          "name": "CELERY_BROKER_URL"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:us-west-2:850714186843:parameter/bookmybook/staging/CELERY_PULL_FROM_BIG_QUERY",
+          "name": "CELERY_PULL_FROM_BIG_QUERY"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:us-west-2:850714186843:parameter/bookmybook/staging/CELERY_PULL_FROM_SWYDO",
+          "name": "CELERY_PULL_FROM_SWYDO"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:us-west-2:850714186843:parameter/bookmybook/staging/CELERY_RESULT_BACKEND",
+          "name": "CELERY_RESULT_BACKEND"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:us-west-2:850714186843:parameter/bookmybook/staging/CLICKFRAUD_API_AUTH_TOKEN",
+          "name": "CLICKFRAUD_API_AUTH_TOKEN"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:us-west-2:850714186843:parameter/bookmybook/staging/DATABASE_URL",
+          "name": "DATABASE_URL"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:us-west-2:850714186843:parameter/bookmybook/staging/DEBUG",
+          "name": "DEBUG"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:us-west-2:850714186843:parameter/bookmybook/staging/DEFAULT_FROM_EMAIL",
+          "name": "DEFAULT_FROM_EMAIL"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:us-west-2:850714186843:parameter/bookmybook/staging/EMAIL_HOST",
+          "name": "EMAIL_HOST"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:us-west-2:850714186843:parameter/bookmybook/staging/EMAIL_HOST_PASSWORD",
+          "name": "EMAIL_HOST_PASSWORD"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:us-west-2:850714186843:parameter/bookmybook/staging/EMAIL_HOST_USER",
+          "name": "EMAIL_HOST_USER"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:us-west-2:850714186843:parameter/bookmybook/staging/EMAIL_PORT",
+          "name": "EMAIL_PORT"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:us-west-2:850714186843:parameter/bookmybook/staging/ENABLE_SILK",
+          "name": "ENABLE_SILK"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:us-west-2:850714186843:parameter/bookmybook/staging/GOOGLE_APPLICATION_CREDENTIALS",
+          "name": "GOOGLE_APPLICATION_CREDENTIALS"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:us-west-2:850714186843:parameter/bookmybook/staging/LSA_CLIENT_ID",
+          "name": "LSA_CLIENT_ID"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:us-west-2:850714186843:parameter/bookmybook/staging/LSA_CLIENT_SECRET",
+          "name": "LSA_CLIENT_SECRET"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:us-west-2:850714186843:parameter/bookmybook/staging/LSA_MANAGER_ID",
+          "name": "LSA_MANAGER_ID"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:us-west-2:850714186843:parameter/bookmybook/staging/LSA_REFRESH_TOKEN",
+          "name": "LSA_REFRESH_TOKEN"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:us-west-2:850714186843:parameter/bookmybook/staging/bookmybook_ADINVESTOR_GOOGLE_APPLICATION_CREDENTIALS",
+          "name": "bookmybook_ADINVESTOR_GOOGLE_APPLICATION_CREDENTIALS"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:us-west-2:850714186843:parameter/bookmybook/staging/REDIS_LOCATION",
+          "name": "REDIS_LOCATION"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:us-west-2:850714186843:parameter/bookmybook/staging/REST_SOCIAL_OAUTH_ABSOLUTE_REDIRECT_URI",
+          "name": "REST_SOCIAL_OAUTH_ABSOLUTE_REDIRECT_URI"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:us-west-2:850714186843:parameter/bookmybook/staging/ROLLBAR_ACCESS_TOKEN",
+          "name": "ROLLBAR_ACCESS_TOKEN"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:us-west-2:850714186843:parameter/bookmybook/staging/SECRET_KEY",
+          "name": "SECRET_KEY"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:us-west-2:850714186843:parameter/bookmybook/staging/SEM_RUSH_API_KEY",
+          "name": "SEM_RUSH_API_KEY"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:us-west-2:850714186843:parameter/bookmybook/staging/SOCIAL_AUTH_GOOGLE_OAUTH2_KEY",
+          "name": "SOCIAL_AUTH_GOOGLE_OAUTH2_KEY"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:us-west-2:850714186843:parameter/bookmybook/staging/SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET",
+          "name": "SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:us-west-2:850714186843:parameter/bookmybook/staging/SWYDO_API_AUTH_TOKEN",
+          "name": "SWYDO_API_AUTH_TOKEN"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:us-west-2:850714186843:parameter/bookmybook/staging/SWYDO_DEFAULT_TEAM_ID",
+          "name": "SWYDO_DEFAULT_TEAM_ID"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:us-west-2:850714186843:parameter/bookmybook/staging/USE_SOCIAL_AUTH_GOOGLE",
+          "name": "USE_SOCIAL_AUTH_GOOGLE"
+        }
+      ]
+            }
+  ]
+
+

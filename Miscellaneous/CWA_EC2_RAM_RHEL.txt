@@ -1,0 +1,36 @@
+For one of my clients I helped him create cloudwatch alarms based on ram usage percent, 
+below are the steps in brief which were followed after logging in RHEL EC2 & last step for CW alarm creation.
+
+----------------------------------------------------------------------------------------------------------
+1] dnf install amazon-cloudwatch-agent or dnf install -y https://s3.amazonaws.com/amazoncloudwatch-agent/redhat/amd64/latest/amazon-cloudwatch-agent.rpm
+
+2] touch /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json
+3]cat > /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json
+
+4] paste this -
+
+{
+  "metrics": {
+    "metrics_collected": {
+      "disk": {
+        "measurement": [
+          "used_percent",
+	  "used"
+        ],
+        "resources": [
+          "*"
+        ]
+      }
+    },
+    "append_dimensions": {
+      "InstanceId": "${aws:InstanceId}"
+    }
+  }
+}
+
+5] press ctrl +c
+6] systemctl enable amazon-cloudwatch-agent
+7] systemctl start amazon-cloudwatch-agent
+8] systemctl status amazon-cloudwatch-agent
+9] df -h (to find the name of major disk at path /)
+10] under metric CWAgent use disk used % metric of major disk for alarm creation.

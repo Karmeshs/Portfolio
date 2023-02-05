@@ -1,0 +1,262 @@
+[{
+  "name":"${cname}",
+  "image": "850714186843.dkr.ecr.eu-west-2.amazonaws.com/bookmybook_app:latest",
+  "cpu": 10,
+  "memoryReservation": 2048,
+  "executionRoleArn": "arn:aws:iam::850714186843:role/ecs-task-execution-role",
+
+  "essential": true,
+      "command": [
+        "bash",
+        "app-entrypoint.sh",
+        "${entrypoint}"
+      ],
+      "environment": [
+        {
+          "name": "ENVIRONMENT",
+          "value": "Production"
+        },
+        {
+          "name": "PROJECT",
+          "value": "bookmybook"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "${logs}",
+          "awslogs-region": "eu-west-2",
+          "awslogs-create-group": "true"
+        }
+      },
+      "secrets": [
+        {
+          "valueFrom": "arn:aws:ssm:eu-west-2:850714186843:parameter/bookmybook/production/GOOGLE_ADS_USE_PROTO_PLUS",
+          "name": "GOOGLE_ADS_USE_PROTO_PLUS"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:eu-west-2:850714186843:parameter/bookmybook/production/ALLOWED_HOSTS",
+          "name": "ALLOWED_HOSTS"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:eu-west-2:850714186843:parameter/bookmybook/production/BING_AD_CLIENT_ID",
+          "name": "BING_AD_CLIENT_ID"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:eu-west-2:850714186843:parameter/bookmybook/production/BING_AD_CLIENT_SECRET",
+          "name": "BING_AD_CLIENT_SECRET"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:eu-west-2:850714186843:parameter/bookmybook/production/BING_AD_REDIRECT_URI",
+          "name": "BING_AD_REDIRECT_URI"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:eu-west-2:850714186843:parameter/bookmybook/production/BING_CLIENT_ID",
+          "name": "BING_CLIENT_ID"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:eu-west-2:850714186843:parameter/bookmybook/production/BING_CLIENT_STATE",
+          "name": "BING_CLIENT_STATE"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:eu-west-2:850714186843:parameter/bookmybook/production/BING_CUSTOMER_ID",
+          "name": "BING_CUSTOMER_ID"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:eu-west-2:850714186843:parameter/bookmybook/production/BING_DEVELOPER_TOKEN",
+          "name": "BING_DEVELOPER_TOKEN"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:eu-west-2:850714186843:parameter/bookmybook/production/BING_ENVIRONMENT",
+          "name": "BING_ENVIRONMENT"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:eu-west-2:850714186843:parameter/bookmybook/production/BING_REFRESH_TOKEN",
+          "name": "BING_REFRESH_TOKEN"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:eu-west-2:850714186843:parameter/bookmybook/production/CELERY_BROKER_URL",
+          "name": "CELERY_BROKER_URL"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:eu-west-2:850714186843:parameter/bookmybook/production/CELERY_PULL_FROM_BIG_QUERY",
+          "name": "CELERY_PULL_FROM_BIG_QUERY"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:eu-west-2:850714186843:parameter/bookmybook/production/CELERY_PULL_FROM_CLICKFRAUD",
+          "name": "CELERY_PULL_FROM_CLICKFRAUD"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:eu-west-2:850714186843:parameter/bookmybook/production/CELERY_PULL_FROM_SWYDO",
+          "name": "CELERY_PULL_FROM_SWYDO"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:eu-west-2:850714186843:parameter/bookmybook/production/CELERY_RESULT_BACKEND",
+          "name": "CELERY_RESULT_BACKEND"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:eu-west-2:850714186843:parameter/bookmybook/production/CELERY_RUN_CHAINED_IMPORTS",
+          "name": "CELERY_RUN_CHAINED_IMPORTS"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:eu-west-2:850714186843:parameter/bookmybook/production/CLICKFRAUD_API_AUTH_TOKEN",
+          "name": "CLICKFRAUD_API_AUTH_TOKEN"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:eu-west-2:850714186843:parameter/bookmybook/production/DATABASE_URL",
+          "name": "DATABASE_URL"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:eu-west-2:850714186843:parameter/bookmybook/production/DEBUG",
+          "name": "DEBUG"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:eu-west-2:850714186843:parameter/bookmybook/production/DEFAULT_FROM_EMAIL",
+          "name": "DEFAULT_FROM_EMAIL"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:eu-west-2:850714186843:parameter/bookmybook/production/EMAIL_HOST",
+          "name": "EMAIL_HOST"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:eu-west-2:850714186843:parameter/bookmybook/production/EMAIL_HOST_PASSWORD",
+          "name": "EMAIL_HOST_PASSWORD"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:eu-west-2:850714186843:parameter/bookmybook/production/EMAIL_HOST_USER",
+          "name": "EMAIL_HOST_USER"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:eu-west-2:850714186843:parameter/bookmybook/production/EMAIL_PORT",
+          "name": "EMAIL_PORT"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:eu-west-2:850714186843:parameter/bookmybook/production/ENABLE_GOOGLE_ADS",
+          "name": "ENABLE_GOOGLE_ADS"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:eu-west-2:850714186843:parameter/bookmybook/production/ENABLE_SILK",
+          "name": "ENABLE_SILK"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:eu-west-2:850714186843:parameter/bookmybook/production/FRONTEND_URL",
+          "name": "FRONTEND_URL"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:eu-west-2:850714186843:parameter/bookmybook/production/FRONTEND_URL_PROTOCOL",
+          "name": "FRONTEND_URL_PROTOCOL"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:eu-west-2:850714186843:parameter/bookmybook/production/GOOGLE_ADS_CLIENT_ID",
+          "name": "GOOGLE_ADS_CLIENT_ID"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:eu-west-2:850714186843:parameter/bookmybook/production/GOOGLE_ADS_CLIENT_SECRET",
+          "name": "GOOGLE_ADS_CLIENT_SECRET"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:eu-west-2:850714186843:parameter/bookmybook/production/GOOGLE_ADS_DEVELOPER_TOKEN",
+          "name": "GOOGLE_ADS_DEVELOPER_TOKEN"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:eu-west-2:850714186843:parameter/bookmybook/production/GOOGLE_ADS_LOGIN_CUSTOMER_ID",
+          "name": "GOOGLE_ADS_LOGIN_CUSTOMER_ID"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:eu-west-2:850714186843:parameter/bookmybook/production/GOOGLE_ADS_REFRESH_TOKEN",
+          "name": "GOOGLE_ADS_REFRESH_TOKEN"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:eu-west-2:850714186843:parameter/bookmybook/production/GOOGLE_APP_JSON",
+          "name": "GOOGLE_APP_JSON"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:eu-west-2:850714186843:parameter/bookmybook/production/GOOGLE_APPLICATION_CREDENTIALS",
+          "name": "GOOGLE_APPLICATION_CREDENTIALS"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:eu-west-2:850714186843:parameter/bookmybook/production/LSA_CLIENT_ID",
+          "name": "LSA_CLIENT_ID"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:eu-west-2:850714186843:parameter/bookmybook/production/LSA_CLIENT_SECRET",
+          "name": "LSA_CLIENT_SECRET"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:eu-west-2:850714186843:parameter/bookmybook/production/LSA_MANAGER_ID",
+          "name": "LSA_MANAGER_ID"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:eu-west-2:850714186843:parameter/bookmybook/production/LSA_REFRESH_TOKEN",
+          "name": "LSA_REFRESH_TOKEN"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:eu-west-2:850714186843:parameter/bookmybook/production/NEW_RELIC_LICENSE_KEY",
+          "name": "NEW_RELIC_LICENSE_KEY"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:eu-west-2:850714186843:parameter/bookmybook/production/bookmybook_ADINVESTOR_GOOGLE_APP_JSON",
+          "name": "bookmybook_ADINVESTOR_GOOGLE_APP_JSON"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:eu-west-2:850714186843:parameter/bookmybook/production/bookmybook_ADINVESTOR_GOOGLE_APPLICATION_CREDENTIALS",
+          "name": "bookmybook_ADINVESTOR_GOOGLE_APPLICATION_CREDENTIALS"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:eu-west-2:850714186843:parameter/bookmybook/production/REDIS_LOCATION",
+          "name": "REDIS_LOCATION"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:eu-west-2:850714186843:parameter/bookmybook/production/REST_SOCIAL_OAUTH_ABSOLUTE_REDIRECT_URI",
+          "name": "REST_SOCIAL_OAUTH_ABSOLUTE_REDIRECT_URI"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:eu-west-2:850714186843:parameter/bookmybook/production/ROLLBAR_ACCESS_TOKEN",
+          "name": "ROLLBAR_ACCESS_TOKEN"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:eu-west-2:850714186843:parameter/bookmybook/production/SECRET_KEY",
+          "name": "SECRET_KEY"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:eu-west-2:850714186843:parameter/bookmybook/production/SEM_RUSH_API_KEY",
+          "name": "SEM_RUSH_API_KEY"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:eu-west-2:850714186843:parameter/bookmybook/production/SHAPE_API_AUTH_TOKEN",
+          "name": "SHAPE_API_AUTH_TOKEN"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:eu-west-2:850714186843:parameter/bookmybook/production/SOCIAL_AUTH_GOOGLE_OAUTH2_KEY",
+          "name": "SOCIAL_AUTH_GOOGLE_OAUTH2_KEY"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:eu-west-2:850714186843:parameter/bookmybook/production/SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET",
+          "name": "SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:eu-west-2:850714186843:parameter/bookmybook/production/SOCIAL_AUTH_GOOGLE_OAUTH2_WHITELISTED_DOMAINS",
+          "name": "SOCIAL_AUTH_GOOGLE_OAUTH2_WHITELISTED_DOMAINS"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:eu-west-2:850714186843:parameter/bookmybook/production/SWYDO_API_AUTH_TOKEN",
+          "name": "SWYDO_API_AUTH_TOKEN"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:eu-west-2:850714186843:parameter/bookmybook/production/SWYDO_DEFAULT_TEAM_ID",
+          "name": "SWYDO_DEFAULT_TEAM_ID"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:eu-west-2:850714186843:parameter/bookmybook/production/SWYDO_NETLOC_REPLACEMENT",
+          "name": "SWYDO_NETLOC_REPLACEMENT"
+        },
+        {
+          "valueFrom": "arn:aws:ssm:eu-west-2:850714186843:parameter/bookmybook/production/USE_SOCIAL_AUTH_GOOGLE",
+          "name": "USE_SOCIAL_AUTH_GOOGLE"
+        }
+      ]
+    }
+  ]
+   
+
+
