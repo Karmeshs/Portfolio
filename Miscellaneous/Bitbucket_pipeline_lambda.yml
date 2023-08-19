@@ -1,0 +1,30 @@
+#LAMBDA pipeline to deploy python application in zip format
+#Bitbucket pipeline to implement CI & CD by using OIDC role for AWS auth
+pipelines:
+  branches:
+    lambda: #only run pipeline for lambda branch in repo
+      - step:
+          name: Build and Zip the app
+          script:
+            - apt-get update && apt-get install -y zip
+            - zip app.zip application.py
+          artifacts:
+            - app.zip
+      - step:
+          oidc: true
+          name: deploy_lambda_np1
+          deployment: NP1
+          script:
+            - echo "Deploying lambda to NP-1 environment"
+            - export AWS_ROLE_ARN=$AWS_ROLE
+            - export AWS_WEB_IDENTITY_TOKEN_FILE=$(pwd)/web-identity-token
+            - echo $BITBUCKET_STEP_OIDC_TOKEN > $(pwd)/web-identity-token
+            - pipe: atlassian/aws-lambda-deploy:1.6.0 #template from bitbucket for AWS lambda deployments
+              variables:
+                AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
+                FUNCTION_NAME: $LAMBDA_FUNC_NAME #Preferable to declare value for func_name in deployment variables as a best practice
+                AWS_OIDC_ROLE_ARN: $AWS_ROLE
+                COMMAND: 'update'
+                ZIP_FILE: 'app.zip'
+                WAIT: 'true'
+            - rm -rf /opt/atlassian/pipelines/agent/build/.bitbucket/pipelines/generated/pipeline/pipes/aws-lambda-deploy-env # cmd to delete artifact post deployment to avoid issues in subsequent deployments

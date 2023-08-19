@@ -1,0 +1,90 @@
+#Bitbucket pipeline to implement CI & CD by using OIDC role for AWS auth and using AWS artifactory to get artifacts to build maven jar for app
+# Can skip steps and script for artifactory in case not required
+#using openjdk mvn base image
+image: radut/openjdk-15-maven
+
+pipelines:
+  branches:
+    dev: #will run only for dev branch
+      - step:
+          oidc: true
+          name: Fetch auth token for aws artifactory 
+          image: atlassian/pipelines-awscli
+          script:
+          - export AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION
+          - export AWS_ROLE_ARN=$AWS_ROLE #$AWS_ROLE can be bitbubket workspace/repository variable similar for all variables(starting with $) 
+          - export AWS_WEB_IDENTITY_TOKEN_FILE=$(pwd)/web-identity-token
+          - echo $BITBUCKET_STEP_OIDC_TOKEN > $(pwd)/web-identity-token
+          - export MY_VAR=`aws codeartifact get-authorization-token --domain parcelbpost --domain-owner $aws_acc_no --query authorizationToken --output text`
+          - echo $MY_VAR
+          - echo "export MY_VAR=$MY_VAR" >> set_env.sh
+          artifacts:
+            - set_env.sh
+      - step:
+          name: app mvn build & test
+          caches:
+            - maven
+          script:
+            - cat set_env.sh 
+            - source set_env.sh
+            - export CODEARTIFACT_AUTH_TOKEN=$MY_VAR
+            - mvn -s settings.xml clean install #need to add an setting.xml file in root if artifactory to be used else skip
+          artifacts:
+            - target/*.jar
+      - step:
+          oidc: true
+          name: Push docker image to ECR
+          services:
+            - docker
+          script:
+            - docker build -t $ECR_NAME .
+            - export AWS_ROLE_ARN=$AWS_ROLE
+            - echo $AWS_ROLE_ARN
+            - export AWS_WEB_IDENTITY_TOKEN_FILE=$(pwd)/web-identity-token
+            - echo $BITBUCKET_STEP_OIDC_TOKEN > $(pwd)/web-identity-token
+            - pipe: atlassian/aws-ecr-push-image:1.5.0 #template provided by bitbucket for docker image push to ecr
+              variables:
+                AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
+                AWS_OIDC_ROLE_ARN: $AWS_ROLE
+                IMAGE_NAME: $ECR_NAME
+                TAGS: 'latest'
+      - parallel:            
+        - step:
+            oidc: true
+            name: Deploy to np1 ecs
+            deployment: np1
+            services:
+              - docker
+            script:
+              - echo "Deploying to NP-1 environment"
+              - export AWS_ROLE_ARN=$AWS_ROLE
+              - export AWS_WEB_IDENTITY_TOKEN_FILE=$(pwd)/web-identity-token
+              - echo $BITBUCKET_STEP_OIDC_TOKEN > $(pwd)/web-identity-token
+              - pipe: atlassian/aws-ecs-deploy:1.6.2 #template provided by bitbucket for deploying new image to ecs
+                variables:
+                  AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
+                  AWS_OIDC_ROLE_ARN: $AWS_ROLE
+                  CLUSTER_NAME: $CLUSTER_NP1   #cluster and service names can be deployment variables instead of repository variables to handle multiple ecs scenarios
+                  SERVICE_NAME: $SERVICE_NP1
+                  TASK_DEFINITION: 'td/taskdef-np1.json' #add an ecs task definition json file in this path for fresh deployment
+                  WAIT: 'true'
+        - step:
+            oidc: true
+            name: Deploy to np2 ecs
+            deployment: np2
+            services:
+              - docker
+            script:
+              - echo "Deploying to NP-2 environment"
+              - export AWS_ROLE_ARN=$AWS_ROLE
+              - export AWS_WEB_IDENTITY_TOKEN_FILE=$(pwd)/web-identity-token
+              - echo $BITBUCKET_STEP_OIDC_TOKEN > $(pwd)/web-identity-token
+              - pipe: atlassian/aws-ecs-deploy:1.6.2 #template provided by bitbucket for deploying new image to ecs
+                variables:
+                  AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
+                  AWS_OIDC_ROLE_ARN: $AWS_ROLE
+                  CLUSTER_NAME: $CLUSTER_NP2   #cluster and service names can be deployment variables instead of repository variables to handle multiple ecs scenarios
+                  SERVICE_NAME: $SERVICE_NP2
+                  TASK_DEFINITION: 'td/taskdef-np2.json' #add an ecs task definition json file in this path for fresh deployment
+                  WAIT: 'true'      
+                  
