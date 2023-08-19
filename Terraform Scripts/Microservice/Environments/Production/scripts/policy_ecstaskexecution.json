@@ -1,0 +1,59 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "VisualEditor0",
+            "Effect": "Allow",
+            "Action": "ecr:GetAuthorizationToken",
+            "Resource": "*"
+        },
+        {
+            "Sid": "VisualEditor1",
+            "Effect": "Allow",
+            "Action": [
+                "sqs:DeleteMessage",
+                "sqs:GetQueueUrl",
+                "rds-data:ExecuteStatement",
+                "sqs:ChangeMessageVisibility",
+                "secretsmanager:DescribeSecret",
+                "ecr:GetDownloadUrlForLayer",
+                "sqs:ReceiveMessage",
+                "sqs:SendMessage",
+                "rds-data:CommitTransaction",
+                "sqs:GetQueueAttributes",
+                "logs:PutLogEvents",
+                "rds-data:BeginTransaction",
+                "logs:CreateLogStream",
+                "secretsmanager:GetSecretValue",
+                "sqs:ListDeadLetterSourceQueues",
+                "rds-data:RollbackTransaction",
+                "sqs:PurgeQueue",
+                "ecr:BatchGetImage",
+                "rds-data:BatchExecuteStatement",
+                "ecr:BatchCheckLayerAvailability"
+            ],
+            "Resource": "*",
+            "Condition": {
+                "StringEquals": {
+                    "aws:ResourceTag/ApplicationAcronym": [
+                        "CAT",
+                        "REPEAT"
+                    ]
+                }
+            }
+        },
+        {
+            "Sid": "VisualEditor2",
+            "Effect": "Allow",
+            "Action": [
+                "s3:PutObject",
+                "s3:GetObject",
+                "s3:ListBucket"
+            ],
+            "Resource": [
+                "arn:aws:s3:::s3bucket-paris-prod",
+                "arn:aws:s3:::s3bucket-paris-prod/*"
+            ]
+        }
+    ]
+}

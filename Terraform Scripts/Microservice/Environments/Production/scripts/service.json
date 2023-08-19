@@ -1,0 +1,24 @@
+[{
+  "name": "${name}",
+  "image": "513764098111.dkr.ecr.us-east-1.amazonaws.com/${ecrname}:latest",
+  "cpu": ${cpu},
+  "memory": ${memory},
+  "portMappings": [
+  {
+    "protocol" : "tcp",
+    "containerPort": ${port},
+    "hostPort": ${port}
+}
+],
+
+  "logConfiguration": {
+  "logDriver": "awslogs",
+  "secretOptions": null,
+  "options": {
+    "awslogs-group": "${logs}",
+    "awslogs-region": "us-east-1",
+    "awslogs-stream-prefix": "ecs"
+  }
+}
+  }
+]

@@ -1,0 +1,15 @@
+{
+  "Statement": [
+    {
+      "Action": [
+        "states:StartExecution"
+      ],
+      "Effect": "Allow",
+      "Resource": [
+        "arn:aws:states:us-east-1:513764098111:execution:stepf-paris-*-01:*",
+        "arn:aws:states:us-east-1:513764098111:stateMachine:stepf-paris-*-01",
+      ]
+    }
+  ],
+  "Version": "2012-10-17"
+}

@@ -1,0 +1,81 @@
+{
+  "Comment": "A description of my state machine",
+  "StartAt": "RegisterScalableTarget",
+  "States": {
+    "RegisterScalableTarget": {
+      "Type": "Task",
+      "Next": "Wait",
+      "Parameters": {
+        "ResourceId": "service/${cluster_name}/${ecs_name}",
+        "ScalableDimension": "ecs:service:DesiredCount",
+        "ServiceNamespace": "ecs",
+        "MinCapacity": 1,
+        "MaxCapacity": 3
+      },
+      "Resource": "arn:aws:states:::aws-sdk:applicationautoscaling:registerScalableTarget",
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "Comment": "Unable to start ECS",
+          "Next": "Fail"
+        }
+      ],
+      "ResultPath": null
+    },
+    "Wait": {
+      "Type": "Wait",
+      "Seconds": 120,
+      "Next": "Lambda input",
+      "Comment": "Wait for ecs to get warm"
+    },
+    "Lambda Report input": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke.waitForTaskToken",
+      "Parameters": {
+        "FunctionName": "${lmb_arn}",
+        "Payload": {
+          "MessageTitle": "Callback Task started",
+          "TaskToken.$": "$$.Task.Token",
+          "report_type.$": "$.report_type",
+          "stateMachineArn.$": "$.stateMachineArn",
+          "queue_url.$": "$.queue_url"
+        }
+      },
+      "Retry": [
+        {
+          "ErrorEquals": [
+            "Lambda.ServiceException",
+            "Lambda.AWSLambdaException",
+            "Lambda.SdkClientException",
+            "Lambda.TooManyRequestsException"
+          ],
+          "IntervalSeconds": 2,
+          "MaxAttempts": 6,
+          "BackoffRate": 2
+        }
+      ],
+      "Comment": "Report input type ",
+      "Next": "Success",
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "Comment": "Status Failed / timeout catcher",
+          "Next": "Fail"
+        }
+      ],
+      "TimeoutSeconds": ${timeout}
+    },
+    "Success": {
+      "Type": "Succeed",
+      "Comment": "Successfully executed"
+    },
+    "Fail": {
+      "Type": "Fail",
+      "Comment": "Unsuccessful execution"
+    }
+  }
+}
